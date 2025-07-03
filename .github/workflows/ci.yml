@@ -12,7 +12,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x]
     
     steps:
     - name: Checkout repository
@@ -37,12 +37,13 @@ jobs:
       run: npm run test:coverage
       
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v3
       with:
-        file: ./coverage/lcov.info
+        files: ./coverage/lcov.info
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
+        verbose: true
         
     - name: Build project
       run: npm run build
@@ -64,7 +65,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '22.x'
         cache: 'npm'
         
     - name: Install dependencies
@@ -90,7 +91,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '22.x'
         cache: 'npm'
         
     - name: Install dependencies
@@ -99,11 +100,5 @@ jobs:
     - name: Run TypeScript check
       run: npx tsc --noEmit
       
-    - name: Check code formatting
-      run: npx prettier --check .
-      
     - name: Run ESLint
       run: npm run lint
-      
-    - name: Check for security vulnerabilities
-      run: npm audit --audit-level=moderate

@@ -10,11 +10,16 @@ afterEach(() => {
 // Mock IntersectionObserver
 beforeAll(() => {
   global.IntersectionObserver = class IntersectionObserver {
+    root = null
+    rootMargin = ''
+    thresholds = []
+    
     constructor() {}
     disconnect() {}
     observe() {}
     unobserve() {}
-  }
+    takeRecords() { return [] }
+  } as any
 
   // Mock ResizeObserver
   global.ResizeObserver = class ResizeObserver {
