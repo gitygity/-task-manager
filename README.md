@@ -5,8 +5,8 @@
 ![License](https://img.shields.io/github/license/gitygity/task-manager?style=flat-square&cacheSeconds=60)
 ![Last Commit](https://img.shields.io/github/last-commit/gitygity/task-manager)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/gitygity/task-manager/ci.yml?branch=main)
-<!-- Coverage badge will be added when testing is implemented -->
-<!-- [![Coverage Status](https://coveralls.io/repos/github/gitygity/task-manager/badge.svg?branch=main)](https://coveralls.io/github/gitygity/task-manager?branch=main) -->
+[![codecov](https://codecov.io/gh/gitygity/task-manager/branch/main/graph/badge.svg)](https://codecov.io/gh/gitygity/task-manager)
+![Tests](https://img.shields.io/github/actions/workflow/status/gitygity/task-manager/ci.yml?branch=main&label=tests)
 
 
 A modern, enterprise-grade task management application built with React, TypeScript, and cutting-edge technologies. Features professional routing system, state management, and beautiful UI components with full type safety.
@@ -243,11 +243,38 @@ git push origin feature/new-feature
 
 ---
 
-## 🧪 Testing (Coming Soon)
+## 🧪 Testing
 
-- **Unit Tests** - Component testing with React Testing Library
-- **Integration Tests** - Route and state testing
-- **E2E Tests** - End-to-end user workflows
+### **Testing Framework**
+- **[Vitest](https://vitest.dev/)** - Fast unit testing framework
+- **[React Testing Library](https://testing-library.com/)** - Component testing utilities
+- **[Jest DOM](https://testing-library.com/docs/ecosystem-jest-dom/)** - Custom DOM matchers
+
+### **Test Commands**
+```bash
+# Run tests in watch mode
+npm run test
+
+# Run tests once
+npm run test:run
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests with UI
+npm run test:ui
+```
+
+### **Coverage Reports**
+- **Statements**: 4.72% (Initial setup)
+- **Branches**: 49.27%
+- **Functions**: 44.44%
+- **Lines**: 4.72%
+
+### **Test Files**
+- ✅ **LoadingSpinner** - Component rendering and props
+- ✅ **Button** - Variants, sizes, events, and accessibility
+- 🔄 **More tests coming soon** - Route guards, stores, and pages
 
 ---
 

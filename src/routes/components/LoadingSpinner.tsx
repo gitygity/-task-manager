@@ -23,7 +23,10 @@ export default function LoadingSpinner({
 
   const content = (
     <div className={cn("flex flex-col items-center justify-center gap-4", className)}>
-      <Loader2 className={cn("animate-spin text-primary", sizes[size])} />
+      <Loader2 
+        data-testid="loading-spinner"
+        className={cn("animate-spin text-primary", sizes[size])} 
+      />
       {message && (
         <p className="text-sm text-muted-foreground">{message}</p>
       )}
