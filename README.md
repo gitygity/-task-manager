@@ -34,19 +34,19 @@ A modern, scalable task management application built with React, Vite, TypeScrip
 ## 📦 Installation
 
 ```bash
-pnpm install
+npm install
 ```
 
 ## ▶️ Development Server
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 ## 🔨 Production Build
 
 ```bash
-pnpm build
+npm run build
 ```
 
 ---
