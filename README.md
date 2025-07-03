@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/github/license/gitygity/task-manager?style=flat-square&cacheSeconds=60)
 ![Last Commit](https://img.shields.io/github/last-commit/gitygity/task-manager)
 ![Build](https://github.com/gitygity/task-manager/actions/workflows/ci.yml/badge.svg)
-[![codecov](https://codecov.io/gh/gitygity/task-manager/branch/main/graph/badge.svg)](https://codecov.io/gh/gitygity/task-manager)
+[![Coverage Status](https://coveralls.io/repos/github/gitygity/task-manager/badge.svg?branch=main)](https://coveralls.io/github/gitygity/task-manager?branch=main)
 ![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=flat-square)
 
 
