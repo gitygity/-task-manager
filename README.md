@@ -4,6 +4,10 @@
 ![Open Issues](https://img.shields.io/github/issues/gitygity/task-manager)
 ![License](https://img.shields.io/github/license/gitygity/task-manager?style=flat-square&cacheSeconds=60)
 ![Last Commit](https://img.shields.io/github/last-commit/gitygity/task-manager)
+![Build](https://github.com/gitygity/task-manager/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/gitygity/task-manager/branch/main/graph/badge.svg)](https://codecov.io/gh/gitygity/task-manager)
+![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=flat-square)
+
 
 A modern, enterprise-grade task management application built with React, TypeScript, and cutting-edge technologies. Features professional routing system, state management, and beautiful UI components with full type safety.
 
