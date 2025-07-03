@@ -1,69 +1,76 @@
-# React + TypeScript + Vite
+# Task Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Repository Size](https://img.shields.io/github/repo-size/gitygity/task-manager)
+![Open Issues](https://img.shields.io/github/issues/gitygity/task-manager)
+![License](https://img.shields.io/github/license/gitygity/task-manager?style=flat-square&cacheSeconds=60)
+![Last Commit](https://img.shields.io/github/last-commit/gitygity/task-manager)
 
-Currently, two official plugins are available:
+A modern, scalable task management application built with React, Vite, TypeScript, and TailwindCSS. This project follows a feature-based architecture and clean code practices to deliver a maintainable and extendable codebase.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- ✅ Authentication (Login / Register / Forgot Password)
+- ✅ Create, edit, delete, and view tasks
+- ✅ Project-based task organization
+- ✅ Profile & account settings
+- ✅ Protected routes
+- ✅ Responsive design with shadcn/ui & Tailwind CSS
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 🛠️ Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- [React](https://reactjs.org/)
+- [Vite](https://vitejs.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [React Router](https://reactrouter.com/)
+
+---
+
+## 📦 Installation
+
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ▶️ Development Server
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm dev
 ```
+
+## 🔨 Production Build
+
+```bash
+pnpm build
+```
+
+---
+
+## 📁 Project Structure (Simplified)
+
+```
+src/
+├── components/      # Shared UI components (shadcn/ui)
+├── features/        # Feature modules (tasks, auth, projects, etc.)
+├── layouts/         # Application layouts
+├── lib/             # Utilities and helpers
+├── pages/           # Page-level components
+└── routes/          # Application routes
+```
+
+---
+
+## 🌐 Live Demo
+
+[Coming soon!]
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
