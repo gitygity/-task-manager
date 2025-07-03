@@ -1,5 +1,10 @@
 # Task Manager
 
+![Repository Size](https://img.shields.io/github/repo-size/USERNAME/task-manager)
+![Open Issues](https://img.shields.io/github/issues/USERNAME/task-manager)
+![License](https://img.shields.io/github/license/USERNAME/task-manager)
+![Last Commit](https://img.shields.io/github/last-commit/USERNAME/task-manager)
+
 A modern, scalable task management application built with React, Vite, TypeScript, and TailwindCSS. This project follows a feature-based architecture and clean code practices to deliver a maintainable and extendable codebase.
 
 ---
