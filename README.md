@@ -4,6 +4,8 @@
 ![Open Issues](https://img.shields.io/github/issues/gitygity/task-manager)
 ![License](https://img.shields.io/github/license/gitygity/task-manager?style=flat-square&cacheSeconds=60)
 ![Last Commit](https://img.shields.io/github/last-commit/gitygity/task-manager)
+[![Coverage Status](https://coveralls.io/repos/github/gitygity/task-manager/badge.svg?branch=main)](https://coveralls.io/github/gitygity/task-manager?branch=main)
+
 
 A modern, enterprise-grade task management application built with React, TypeScript, and cutting-edge technologies. Features professional routing system, state management, and beautiful UI components with full type safety.
 
