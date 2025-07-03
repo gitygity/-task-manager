@@ -2,7 +2,7 @@
 
 ![Repository Size](https://img.shields.io/github/repo-size/gitygity/task-manager)
 ![Open Issues](https://img.shields.io/github/issues/gitygity/task-manager)
-![License](https://img.shields.io/github/license/gitygity/task-manager)
+![License]([https://img.shields.io/github/license/gitygity/task-manager](https://img.shields.io/github/license/gitygity/task-manager?style=flat-square&cacheSeconds=60))
 ![Last Commit](https://img.shields.io/github/last-commit/gitygity/task-manager)
 
 A modern, scalable task management application built with React, Vite, TypeScript, and TailwindCSS. This project follows a feature-based architecture and clean code practices to deliver a maintainable and extendable codebase.
