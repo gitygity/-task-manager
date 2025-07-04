@@ -92,6 +92,26 @@ cd task-manager
 npm install
 ```
 
+### Environment Setup
+
+Create your environment configuration:
+
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit the .env file with your configuration
+# Required: Supabase credentials
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+**Environment Variables:**
+- `VITE_SUPABASE_URL` - Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+- `NODE_ENV` - Application environment (development/production)
+- `VITE_API_BASE_URL` - API base URL (optional)
+
 ### Development
 
 ```bash
