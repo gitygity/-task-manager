@@ -133,4 +133,105 @@ SELECT * FROM public.tasks;
                         │ created_at      │
                         │ updated_at      │
                         └─────────────────┘
+```
+
+## 🔄 Database Migration: Add Priority and Subtasks
+
+**Note: اگر قبلاً جدول tasks را ایجاد کردید، این کد را اجرا کنید:**
+
+```sql
+-- اضافه کردن فیلد priority (اولویت)
+ALTER TABLE public.tasks 
+ADD COLUMN priority text NOT NULL DEFAULT 'medium';
+
+-- اضافه کردن فیلد parent_task_id برای سابتسک
+ALTER TABLE public.tasks 
+ADD COLUMN parent_task_id uuid;
+
+-- اضافه کردن foreign key constraint برای parent_task_id
+ALTER TABLE public.tasks 
+ADD CONSTRAINT fk_parent_task 
+FOREIGN KEY (parent_task_id) REFERENCES public.tasks(id) ON DELETE CASCADE;
+
+-- اضافه کردن index برای بهتر شدن عملکرد
+CREATE INDEX idx_tasks_priority ON public.tasks(priority);
+CREATE INDEX idx_tasks_parent_task_id ON public.tasks(parent_task_id);
+
+-- تعریف constraint برای مقادیر مجاز priority
+ALTER TABLE public.tasks 
+ADD CONSTRAINT chk_priority 
+CHECK (priority IN ('low', 'medium', 'high', 'urgent'));
+```
+
+**اگر جدول tasks را هنوز ایجاد نکردید، از این کد استفاده کنید:**
+
+```sql
+-- Create tasks table with priority and subtasks support
+CREATE TABLE public.tasks (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  title text NOT NULL,
+  description text,
+  status text NOT NULL DEFAULT 'todo',
+  priority text NOT NULL DEFAULT 'medium',
+  parent_task_id uuid,
+  due_date timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  
+  -- Foreign key constraints
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_parent_task FOREIGN KEY (parent_task_id) REFERENCES public.tasks(id) ON DELETE CASCADE,
+  
+  -- Priority validation
+  CONSTRAINT chk_priority CHECK (priority IN ('low', 'medium', 'high', 'urgent'))
+);
+
+-- Create indexes for better performance
+CREATE INDEX idx_tasks_user_id ON public.tasks(user_id);
+CREATE INDEX idx_tasks_status ON public.tasks(status);
+CREATE INDEX idx_tasks_priority ON public.tasks(priority);
+CREATE INDEX idx_tasks_parent_task_id ON public.tasks(parent_task_id);
+CREATE INDEX idx_tasks_created_at ON public.tasks(created_at);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE public.tasks ENABLE ROW LEVEL SECURITY;
+
+-- Create policies for RLS
+-- Users can only see their own tasks
+CREATE POLICY "Users can view their own tasks" ON public.tasks
+  FOR SELECT USING (auth.uid() = user_id);
+
+-- Users can insert their own tasks
+CREATE POLICY "Users can insert their own tasks" ON public.tasks
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- Users can update their own tasks
+CREATE POLICY "Users can update their own tasks" ON public.tasks
+  FOR UPDATE USING (auth.uid() = user_id);
+
+-- Users can delete their own tasks
+CREATE POLICY "Users can delete their own tasks" ON public.tasks
+  FOR DELETE USING (auth.uid() = user_id);
+```
+
+## 📊 Updated Database Schema
+
+```
+┌─────────────────┐     ┌─────────────────────┐
+│   auth.users    │     │    public.tasks     │
+├─────────────────┤     ├─────────────────────┤
+│ id (uuid) PK    │────▶│ user_id (uuid)      │
+│ email           │     │ id (uuid) PK        │
+│ created_at      │     │ title               │
+│ updated_at      │     │ description         │
+│ user_metadata   │     │ status              │
+└─────────────────┘     │ priority (NEW)      │
+                        │ parent_task_id (NEW)│─┐
+                        │ due_date            │ │
+                        │ created_at          │ │
+                        │ updated_at          │ │
+                        └─────────────────────┘ │
+                                  ▲─────────────┘
+                                  (Self-referencing for subtasks)
 ``` 

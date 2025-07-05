@@ -1,10 +1,7 @@
 // Entry point for tasks feature
-export * from './components/TaskDemo'
-export * from './components/TaskList'
-export * from './components/TaskActions'
+export * from './components'
 export * from './hooks'
 export * from './services/taskService'
 export * from './types'
 export * from './utils'
-export * from './model'
 export { useTasksStore } from './tasksStore' 

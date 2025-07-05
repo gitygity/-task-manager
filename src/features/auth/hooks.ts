@@ -9,42 +9,46 @@ export const AUTH_KEYS = {
   user: () => [...AUTH_KEYS.all, 'user'] as const,
 } as const
 
+// @deprecated Use useAuthStore instead to avoid duplicate API calls
 // Hook for current user state
 export function useAuth() {
+  console.warn('⚠️  useAuth is deprecated. Use useAuthStore instead to avoid duplicate API calls.')
+  
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-
-  const userQuery = useQuery({
-    queryKey: AUTH_KEYS.user(),
-    queryFn: authService.getCurrentUser,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    retry: false, // Don't retry auth failures
-  })
+  const [error, setError] = useState<Error | null>(null)
 
   // Listen to auth state changes
   useEffect(() => {
     const { data: { subscription } } = authService.onAuthStateChange((user) => {
       setUser(user)
       setLoading(false)
+      setError(null)
     })
 
-    // Initial load
-    authService.getCurrentUser().then((user) => {
-      setUser(user)
-      setLoading(false)
-    })
+    // Initial load - only call once
+    authService.getCurrentUser()
+      .then((user) => {
+        setUser(user)
+        setLoading(false)
+        setError(null)
+      })
+      .catch((err) => {
+        setError(err)
+        setLoading(false)
+        setUser(null)
+      })
 
     return () => {
       subscription.unsubscribe()
     }
-  }, [])
+  }, []) // Empty dependency array ensures this runs only once
 
   return {
-    user: user || userQuery.data || null,
-    loading: loading || userQuery.isLoading,
-    isAuthenticated: !!(user || userQuery.data),
-    error: userQuery.error,
+    user,
+    loading,
+    isAuthenticated: !!user,
+    error,
   }
 }
 
@@ -56,12 +60,6 @@ export function useLogin() {
     mutationFn: authService.login,
     onSuccess: (response) => {
       if (response.user) {
-        // Update user cache
-        queryClient.setQueryData(AUTH_KEYS.user(), response.user)
-        
-        // Invalidate and refetch user query
-        queryClient.invalidateQueries({ queryKey: AUTH_KEYS.user() })
-        
         // Clear any existing tasks cache since user changed
         queryClient.invalidateQueries({ queryKey: ['tasks'] })
       }
@@ -77,11 +75,8 @@ export function useRegister() {
     mutationFn: authService.register,
     onSuccess: (response) => {
       if (response.user) {
-        // Update user cache
-        queryClient.setQueryData(AUTH_KEYS.user(), response.user)
-        
-        // Invalidate and refetch user query
-        queryClient.invalidateQueries({ queryKey: AUTH_KEYS.user() })
+        // Clear any existing tasks cache since user changed
+        queryClient.invalidateQueries({ queryKey: ['tasks'] })
       }
     },
   })
@@ -96,9 +91,6 @@ export function useLogout() {
     onSuccess: () => {
       // Clear all cache
       queryClient.clear()
-      
-      // Set user to null
-      queryClient.setQueryData(AUTH_KEYS.user(), null)
     },
   })
 }

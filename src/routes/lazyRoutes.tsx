@@ -13,10 +13,7 @@ export const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
 export const DashboardPage = lazy(() => import('../pages/dashboard'))
 
 // Private pages - Tasks
-export const TasksListPage = lazy(() => import('../pages/tasks/TasksListPage'))
-export const CreateTaskPage = lazy(() => import('../pages/tasks/CreateTaskPage'))
-export const EditTaskPage = lazy(() => import('../pages/tasks/EditTaskPage'))
-export const TaskDetailsPage = lazy(() => import('../pages/tasks/TaskDetailsPage'))
+// Task pages removed - using integrated KanbanBoard instead
 
 // Private pages - Projects
 export const ProjectsListPage = lazy(() => import('../pages/projects/ProjectsListPage'))

@@ -10,10 +10,6 @@ import {
   ResetPasswordPage,
   NotFoundPage,
   DashboardPage,
-  TasksListPage,
-  CreateTaskPage,
-  EditTaskPage,
-  TaskDetailsPage,
   ProjectsListPage,
   CreateProjectPage,
   EditProjectPage,
@@ -84,23 +80,7 @@ const privateRoutes: RouteObject[] = [
         element: <DashboardPage />,
       },
       
-      // Tasks routes
-      {
-        path: ROUTE_PATHS.private.tasks.list,
-        element: <TasksListPage />,
-      },
-      {
-        path: ROUTE_PATHS.private.tasks.create,
-        element: <CreateTaskPage />,
-      },
-      {
-        path: ROUTE_PATHS.private.tasks.details,
-        element: <TaskDetailsPage />,
-      },
-      {
-        path: ROUTE_PATHS.private.tasks.edit,
-        element: <EditTaskPage />,
-      },
+      // Tasks routes - integrated into dashboard
       
       // Projects routes
       {

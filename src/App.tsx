@@ -1,7 +1,8 @@
 import './App.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useAuth, AuthContainer } from '@/features/auth'
-import { TaskDemo } from '@/features/tasks'
+import { useEffect } from 'react'
+import { useAuthStore, AuthContainer } from '@/features/auth'
+import { KanbanBoard, TaskStats } from '@/features/tasks'
 import { Header } from '@/components/layout/Header'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 
@@ -17,7 +18,12 @@ const queryClient = new QueryClient({
 })
 
 function AppContent() {
-  const { isAuthenticated, loading } = useAuth()
+  const { isAuthenticated, loading, initialize } = useAuthStore()
+
+  // Initialize auth store on mount
+  useEffect(() => {
+    initialize()
+  }, [initialize])
 
   // Show loading spinner while checking auth
   if (loading) {
@@ -48,7 +54,8 @@ function AppContent() {
             </p>
           </div>
           
-          <TaskDemo />
+          <TaskStats />
+          <KanbanBoard />
         </div>
       </div>
     </div>

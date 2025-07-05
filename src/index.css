@@ -66,3 +66,129 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Custom Drag and Drop Styles */
+.dnd-context {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.dnd-context .allow-select {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+/* Drag handle */
+.drag-handle {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+/* Kanban card styles */
+.kanban-card {
+  /* No transitions for instant feel */
+}
+
+.kanban-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Prevent accidental interactions during drag */
+.kanban-card * {
+  pointer-events: none;
+}
+
+.kanban-card .allow-select {
+  pointer-events: auto;
+}
+
+/* Allow drag handle to be interactive */
+.kanban-card .drag-handle {
+  pointer-events: auto;
+}
+
+/* Ensure buttons and interactive elements work */
+.kanban-card .pointer-events-auto {
+  pointer-events: auto !important;
+}
+
+.kanban-card button {
+  pointer-events: auto !important;
+}
+
+.kanban-card input {
+  pointer-events: auto !important;
+}
+
+.kanban-card form {
+  pointer-events: auto !important;
+}
+
+/* Drop zone styles */
+.drop-zone {
+  transition: background-color 0.2s ease;
+}
+
+.drop-zone.active {
+  background-color: rgba(59, 130, 246, 0.1);
+  border: 2px dashed #3b82f6;
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .drag-handle {
+    opacity: 1 !important;
+    -webkit-touch-callout: none;
+  }
+}
+
+/* Make drag handle more visible */
+.kanban-card .drag-handle {
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+
+.kanban-card:hover .drag-handle,
+.kanban-card .drag-handle:hover {
+  opacity: 1;
+}
