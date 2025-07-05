@@ -244,19 +244,9 @@ export function useSimpleDragDrop<T extends { id: string }>(
 ) {
   const { state, createDraggable, createDropZone, createDragPreview } = useDragAndDrop({
     onDrop: (item, dropZone) => {
-      console.log('onDrop called:', { 
-        itemId: item.id, 
-        sourceZone: item.sourceZone, 
-        dropZoneId: dropZone.id,
-        shouldMove: item.sourceZone && item.sourceZone !== dropZone.id
-      })
-      
       // Only call onItemMove if source and target zones are different
       if (item.sourceZone && item.sourceZone !== dropZone.id) {
-        console.log('Calling onItemMove - zones are different')
         onItemMove(item.id, dropZone.id, item.sourceZone)
-      } else {
-        console.log('Skipping onItemMove - same zone or missing sourceZone')
       }
     },
   })

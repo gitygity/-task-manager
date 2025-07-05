@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { useTasks, useUpdateTask, useCreateTask } from '../hooks'
 import { useAuthStore } from '@/features/auth'
-import { useSimpleDragDrop } from '@/hooks/useDragAndDrop'
+import { useSimpleDragDrop } from '../hooks/useDragAndDrop'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -31,24 +31,14 @@ export function KanbanBoard() {
   const createTask = useCreateTask()
 
   // Handle drag and drop
-  const handleTaskMove = useCallback(async (taskId: string, targetStatus: string, sourceStatus: string) => {
-    console.log('handleTaskMove called:', { taskId, targetStatus, sourceStatus })
-    
+  const handleTaskMove = useCallback(async (taskId: string, targetStatus: string, _sourceStatus: string) => {
     if (!tasks) return
     
     const task = tasks.find(t => t.id === taskId)
-    if (!task) {
-      console.log('Task not found:', taskId)
-      return
-    }
+    if (!task) return
     
     // Don't call API if status hasn't changed
-    if (task.status === targetStatus) {
-      console.log('Task status unchanged, skipping API call')
-      return
-    }
-
-    console.log('Updating task status from', task.status, 'to', targetStatus)
+    if (task.status === targetStatus) return
 
     try {
       await updateTask.mutateAsync({
@@ -116,7 +106,6 @@ export function KanbanBoard() {
 
   // Handle task edit
   const handleEditTask = (task: Task) => {
-    console.log('handleEditTask called with task:', task.title)
     setEditingTask(task)
     setIsEditModalOpen(true)
   }

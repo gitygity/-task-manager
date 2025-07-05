@@ -1,7 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { authService } from './services/authService'
-import type { User } from './types'
 
 // Query keys
 export const AUTH_KEYS = {
@@ -9,48 +7,7 @@ export const AUTH_KEYS = {
   user: () => [...AUTH_KEYS.all, 'user'] as const,
 } as const
 
-// @deprecated Use useAuthStore instead to avoid duplicate API calls
-// Hook for current user state
-export function useAuth() {
-  console.warn('⚠️  useAuth is deprecated. Use useAuthStore instead to avoid duplicate API calls.')
-  
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
-
-  // Listen to auth state changes
-  useEffect(() => {
-    const { data: { subscription } } = authService.onAuthStateChange((user) => {
-      setUser(user)
-      setLoading(false)
-      setError(null)
-    })
-
-    // Initial load - only call once
-    authService.getCurrentUser()
-      .then((user) => {
-        setUser(user)
-        setLoading(false)
-        setError(null)
-      })
-      .catch((err) => {
-        setError(err)
-        setLoading(false)
-        setUser(null)
-      })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, []) // Empty dependency array ensures this runs only once
-
-  return {
-    user,
-    loading,
-    isAuthenticated: !!user,
-    error,
-  }
-}
+// useAuth hook removed - use useAuthStore instead to avoid duplicate API calls
 
 // Hook for login
 export function useLogin() {

@@ -108,11 +108,11 @@ export default function AdminLayout() {
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-destructive rounded-full flex items-center justify-center">
                     <span className="text-destructive-foreground text-sm font-bold">
-                      {user?.name?.charAt(0) || 'A'}
+                      {user?.user_metadata?.full_name?.charAt(0) || 'A'}
                     </span>
                   </div>
                   <div>
-                    <div className="text-sm font-medium">{user?.name || 'Admin'}</div>
+                    <div className="text-sm font-medium">{user?.user_metadata?.full_name || 'Admin'}</div>
                     <Badge variant="destructive" className="text-xs">Administrator</Badge>
                   </div>
                 </div>

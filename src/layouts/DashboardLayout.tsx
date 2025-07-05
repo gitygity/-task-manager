@@ -41,7 +41,7 @@ export default function DashboardLayout() {
             <div className="flex items-center space-x-3">
               <div className="text-sm">
                 <span className="text-muted-foreground">Welcome, </span>
-                <span className="font-medium">{user?.name || 'Guest'}</span>
+                <span className="font-medium">{user?.user_metadata?.full_name || 'Guest'}</span>
               </div>
               
               <Separator orientation="vertical" className="h-6" />
@@ -49,7 +49,7 @@ export default function DashboardLayout() {
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
                   <span className="text-muted-foreground text-sm font-medium">
-                    {user?.name?.charAt(0) || '?'}
+                    {user?.user_metadata?.full_name?.charAt(0) || '?'}
                   </span>
                 </div>
                 <Badge variant="outline" className="text-xs">Guest</Badge>

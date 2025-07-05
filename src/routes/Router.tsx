@@ -17,7 +17,7 @@ function RouteTracker() {
     }
 
     // Custom analytics tracking
-    console.log('Route changed:', location.pathname)
+    // Route analytics would be implemented here if needed
   }, [location])
 
   return null

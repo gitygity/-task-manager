@@ -4,6 +4,7 @@ export interface User {
   user_metadata?: {
     full_name?: string
     avatar_url?: string
+    role?: 'user' | 'admin' | 'moderator'
   }
   created_at: string
   updated_at: string

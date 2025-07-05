@@ -75,11 +75,6 @@ export const authService = {
       }
 
       // Note: User might need email confirmation depending on Supabase settings
-      console.log('Register response:', {
-        user: data.user,
-        session: data.session,
-        needsConfirmation: !data.session
-      })
 
       const user: User | null = data.user ? {
         id: data.user.id,

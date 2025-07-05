@@ -14,11 +14,11 @@ export default function SmartLayoutGuard() {
   }
 
   // Choose layout based on user role
-  if (user?.role === 'admin') {
+  if (user?.user_metadata?.role === 'admin') {
     return <AdminLayout />
   }
   
-  if (user?.role === 'user') {
+  if (user?.user_metadata?.role === 'user') {
     return <UserLayout />
   }
 

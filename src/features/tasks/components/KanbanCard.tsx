@@ -62,12 +62,7 @@ function KanbanCardComponent({
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
-    console.log('Three dots clicked for task:', task.title)
-    if (onEdit) {
-      onEdit(task)
-    } else {
-      console.log('onEdit handler not provided')
-    }
+    onEdit?.(task)
   }
 
   const handleCreateSubtask = async (e: React.FormEvent) => {

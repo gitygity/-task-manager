@@ -1,11 +1,12 @@
 // Zustand store for auth
 import { create } from 'zustand'
 import { authService } from './services/authService'
-import type { AuthState } from './model'
+import type { AuthState } from './types'
 import type { User } from './types'
 
 interface AuthStore extends AuthState {
-  // Internal state
+  // Additional state
+  error: string | null
   _initialized?: boolean
   _subscription?: any
   // Actions

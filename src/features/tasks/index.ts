@@ -2,6 +2,4 @@
 export * from './components'
 export * from './hooks'
 export * from './services/taskService'
-export * from './types'
-export * from './utils'
-export { useTasksStore } from './tasksStore' 
+export * from './types' 

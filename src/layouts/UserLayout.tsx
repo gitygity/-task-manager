@@ -45,7 +45,7 @@ export default function UserLayout() {
             <div className="flex items-center space-x-4">
               <div className="hidden sm:block">
                 <span className="text-sm text-muted-foreground">Hello, </span>
-                <span className="text-sm font-medium">{user?.name || 'User'}</span>
+                <span className="text-sm font-medium">{user?.user_metadata?.full_name || 'User'}</span>
               </div>
               
               <Separator orientation="vertical" className="h-6" />
@@ -53,7 +53,7 @@ export default function UserLayout() {
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                   <span className="text-primary-foreground text-sm font-medium">
-                    {user?.name?.charAt(0) || 'U'}
+                    {user?.user_metadata?.full_name?.charAt(0) || 'U'}
                   </span>
                 </div>
                 <Badge variant="secondary" className="text-xs">User</Badge>

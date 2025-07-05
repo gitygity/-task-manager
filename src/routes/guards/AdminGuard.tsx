@@ -27,7 +27,7 @@ export default function AdminGuard({ children }: AdminGuardProps) {
   }
 
   // Not admin - show access denied or redirect
-  if (!user || user.role !== 'admin') {
+  if (!user || user.user_metadata?.role !== 'admin') {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
