@@ -1,6 +1,10 @@
 // Entry point for auth feature
-export * from './api'
+export * from './components/AuthContainer'
+export * from './components/LoginForm'
+export * from './components/RegisterForm'
 export * from './hooks'
-export * from './model'
+export * from './services/authService'
+export * from './types'
 export * from './utils'
+export * from './model'
 export { useAuthStore } from './authStore'

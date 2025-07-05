@@ -1,376 +1,163 @@
-# Task Manager 📋
+# راه‌اندازی Supabase برای مدیریت تسک
 
-![Repository Size](https://img.shields.io/github/repo-size/gitygity/task-manager)
-![Open Issues](https://img.shields.io/github/issues/gitygity/task-manager)
-![License](https://img.shields.io/github/license/gitygity/task-manager?style=flat-square&cacheSeconds=60)
-![Last Commit](https://img.shields.io/github/last-commit/gitygity/task-manager)
-![Build Status](https://img.shields.io/github/actions/workflow/status/gitygity/task-manager/ci.yml?branch=main)
-[![codecov](https://codecov.io/gh/gitygity/task-manager/branch/main/graph/badge.svg)](https://codecov.io/gh/gitygity/task-manager)
-![Tests](https://img.shields.io/github/actions/workflow/status/gitygity/task-manager/ci.yml?branch=main&label=tests)
+## 🚀 شروع سریع
 
+### 1. ایجاد جدول در Supabase
 
-A modern, enterprise-grade task management application built with React, TypeScript, and cutting-edge technologies. Features professional routing system, state management, and beautiful UI components with full type safety.
+در پنل **SQL Editor** سوپابیس، کوئری زیر را اجرا کنید:
 
----
+```sql
+-- ایجاد جدول تسک‌ها
+create table public.tasks (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  title text not null,
+  description text,
+  status text not null default 'todo',
+  due_date timestamp with time zone,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
 
-## ✨ Features
+-- فعال‌سازی RLS (Row Level Security)
+alter table public.tasks enable row level security;
 
-### 🔐 **Authentication & Authorization**
-- ✅ Multi-role authentication (User/Admin)
-- ✅ Route guards with smart layout selection
-- ✅ Protected routes with redirect handling
-- ✅ Login, Register, Password Reset flows
-
-### 📋 **Task Management**
-- ✅ Create, edit, delete, and view tasks
-- ✅ Task priorities and status tracking
-- ✅ Rich task details and descriptions
-- ✅ Task filtering and search
-
-### 📁 **Project Organization**
-- ✅ Project-based task grouping
-- ✅ Project management dashboard
-- ✅ Team collaboration features
-- ✅ Project analytics and insights
-
-### 👤 **User Experience**
-- ✅ Role-based dashboards (User/Admin)
-- ✅ Profile management and preferences
-- ✅ Security settings and account control
-- ✅ Responsive design for all devices
-
-### 🎨 **Modern UI/UX**
-- ✅ shadcn/ui component library
-- ✅ Dark/Light theme support
-- ✅ Smooth animations and transitions
-- ✅ Professional design system
-
----
-
-## 🛠️ Tech Stack
-
-### **Frontend Framework**
-- **[React 18](https://reactjs.org/)** - Modern React with hooks
-- **[TypeScript](https://www.typescriptlang.org/)** - Full type safety
-- **[Vite](https://vitejs.dev/)** - Lightning fast build tool
-
-### **Styling & UI**
-- **[TailwindCSS](https://tailwindcss.com/)** - Utility-first CSS
-- **[shadcn/ui](https://ui.shadcn.com/)** - High-quality components
-- **[Lucide React](https://lucide.dev/)** - Beautiful icons
-- **[CVA](https://cva.style/)** - Class variance authority
-
-### **Routing & State**
-- **[React Router v7](https://reactrouter.com/)** - Client-side routing
-- **[Zustand](https://zustand-demo.pmnd.rs/)** - Lightweight state management
-- **Professional routing system** with guards and utilities
-
-### **Development Tools**
-- **[ESLint](https://eslint.org/)** - Code linting
-- **[Prettier](https://prettier.io/)** - Code formatting
-- **[Commitizen](https://commitizen.github.io/)** - Conventional commits
-- **[TypeScript ESLint](https://typescript-eslint.io/)** - TS-specific rules
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-- **Node.js** 18+ 
-- **npm** or **yarn** or **pnpm**
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/gitygity/task-manager.git
-
-# Navigate to project directory
-cd task-manager
-
-# Install dependencies
-npm install
+-- ایجاد policy برای دسترسی کاربران
+create policy "Users can access their own tasks"
+  on public.tasks for all
+  using (auth.uid() = user_id);
 ```
 
-### Environment Setup
+### 2. تنظیم Environment Variables
 
-Create your environment configuration:
+فایل `.env` را با مقادیر مربوط به پروژه سوپابیس خود پر کنید:
 
-```bash
-# Copy the example environment file
-cp .env.example .env
-
-# Edit the .env file with your configuration
-# Required: Supabase credentials
+```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-**Environment Variables:**
-- `VITE_SUPABASE_URL` - Your Supabase project URL
-- `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
-- `NODE_ENV` - Application environment (development/production)
-- `VITE_API_BASE_URL` - API base URL (optional)
-
-### Development
+### 3. اجرای پروژه
 
 ```bash
-# Start development server
+# نصب dependencies
+npm install
+
+# اجرای پروژه
 npm run dev
-
-# Open http://localhost:5173 in your browser
 ```
 
-### Available Scripts
+## 🛠️ فایل‌های ایجاد شده
 
-```bash
-# Development
-npm run dev          # Start dev server with HMR
-
-# Building
-npm run build        # Production build
-npm run preview      # Preview production build
-
-# Code Quality
-npm run lint         # Run ESLint
-npm run lint:fix     # Fix ESLint errors
-
-# Git Workflow
-npm run commit       # Conventional commits with Commitizen
-git cz              # Alternative commit command
-```
-
----
-
-## 📁 Project Architecture
-
-```
-src/
-├── 📁 components/           # Shared UI components
-│   ├── ui/                 # shadcn/ui components
-│   └── ErrorBoundary.tsx   # Error handling
-│
-├── 📁 features/            # Feature-based modules
-│   ├── auth/              # Authentication logic
-│   ├── tasks/             # Task management
-│   └── projects/          # Project features
-│
-├── 📁 layouts/            # Application layouts
-│   ├── AdminLayout.tsx    # Admin dashboard layout
-│   ├── UserLayout.tsx     # User dashboard layout
-│   ├── AuthLayout.tsx     # Authentication pages
-│   └── PublicLayout.tsx   # Public pages
-│
-├── 📁 lib/               # Utilities and helpers
-│   └── utils.ts          # Common utilities
-│
-├── 📁 pages/             # Page components
-│   ├── auth/             # Authentication pages
-│   ├── tasks/            # Task pages
-│   ├── projects/         # Project pages
-│   ├── profile/          # User profile pages
-│   └── admin/            # Admin pages
-│
-└── 📁 routes/            # Professional routing system
-    ├── components/       # Route-specific components
-    ├── guards/          # Route protection (Auth/Guest/Admin)
-    ├── config.tsx       # Route configuration
-    ├── constants.ts     # Route constants and metadata
-    ├── utils.ts         # Navigation utilities
-    └── types.ts         # Route type definitions
-```
-
----
-
-## 🔐 Authentication & Security
-
-### **Route Guards**
-- **`AuthGuard`** - Protects private routes
-- **`GuestGuard`** - Redirects authenticated users
-- **`AdminGuard`** - Admin-only access control
-- **`SmartLayoutGuard`** - Role-based layout selection
-
-### **User Roles**
-- **Admin** - Full system access with management dashboard
-- **User** - Standard user with personal task management
-- **Guest** - Public access to landing and auth pages
-
----
-
-## 🎨 UI Components
-
-### **Component Library**
-Built with **shadcn/ui** for consistency and accessibility:
-
-- **Forms** - Input, Button, Label, Alert
-- **Layout** - Card, Separator, Badge  
-- **Navigation** - Professional routing with breadcrumbs
-- **Feedback** - Loading spinners, error boundaries
-
-### **Design Tokens**
-- Consistent color palette with CSS variables
-- Responsive breakpoints
-- Typography scale
-- Spacing system
-
----
-
-## 🔄 State Management
-
-### **Zustand Stores**
-- **`useAuthStore`** - Authentication state and user data
-- **`useTasksStore`** - Task management and operations
-- Feature-specific stores with TypeScript support
-
-### **State Architecture**
+### Types (`src/types/task.ts`)
 ```typescript
-// Example: Auth Store
-interface AuthState {
-  user: User | null
-  isAuthenticated: boolean
-  loading: boolean
-  login: (credentials: LoginData) => Promise<void>
-  logout: () => void
+interface Task {
+  id: string
+  user_id: string
+  title: string
+  description: string | null
+  status: 'todo' | 'in_progress' | 'completed'
+  due_date: string | null
+  created_at: string
+  updated_at: string
 }
 ```
 
----
+### Service Layer (`src/services/taskService.ts`)
+- `getTasks(userId)` - دریافت تسک‌های کاربر
+- `createTask(userId, taskData)` - ایجاد تسک جدید
+- `updateTask(taskId, updates)` - بروزرسانی تسک
+- `deleteTask(taskId)` - حذف تسک
 
-## 🚦 Development Workflow
+### React Query Hooks (`src/hooks/useTasks.ts`)
+**همه با Optimistic Updates! ⚡**
 
-### **Git Workflow**
-```bash
-# 1. Create feature branch
-git checkout -b feature/new-feature
+- `useTasks(userId)` - دریافت تسک‌ها با caching
+- `useCreateTask()` - ایجاد فوری + real data جایگزینی
+- `useUpdateTask()` - بروزرسانی فوری + rollback در صورت خطا
+- `useDeleteTask()` - حذف فوری + برگرداندن در صورت خطا
 
-# 2. Make changes and commit with conventional commits
-npm run commit
+### Components
+- `TaskList` - نمایش ساده لیست تسک‌ها
+- `TaskActions` - کامپوننت کامل با edit, delete, status change
+- `TaskDemo` - کامپوننت کامل با فرم ایجاد + TaskActions
 
-# 3. Push changes
-git push origin feature/new-feature
+## 📱 استفاده
 
-# 4. Create Pull Request
+```tsx
+import { TaskDemo } from '@/components/TaskDemo'
+
+function App() {
+  const userId = 'user-123' // از authentication store
+  
+  return <TaskDemo userId={userId} />
+}
 ```
 
-### **Conventional Commits**
-- `feat:` - New features
-- `fix:` - Bug fixes  
-- `docs:` - Documentation changes
-- `style:` - Code formatting
-- `refactor:` - Code refactoring
-- `test:` - Adding tests
-- `chore:` - Maintenance tasks
+## 🚀 ویژگی‌های جدید
 
----
+### ⚡ **Optimistic Updates همه جا**
+```typescript
+// Create Task
+onMutate: async ({ userId, taskData }) => {
+  // فوری temp task نشون میده
+  const tempTask = { id: `temp-${Date.now()}`, ...taskData }
+  queryClient.setQueryData(TASK_KEYS.list(userId), 
+    (oldTasks) => [tempTask, ...oldTasks]
+  )
+}
 
-## 🧪 Testing
+// Update Task  
+onMutate: async ({ taskId, updates }) => {
+  // فوری تغییرات رو نشون میده
+  queryClient.setQueryData(targetQueryKey, (oldTasks) =>
+    oldTasks?.map(task => 
+      task.id === taskId ? { ...task, ...updates } : task
+    )
+  )
+}
 
-### **Testing Framework**
-- **[Vitest](https://vitest.dev/)** - Fast unit testing framework
-- **[React Testing Library](https://testing-library.com/)** - Component testing utilities
-- **[Jest DOM](https://testing-library.com/docs/ecosystem-jest-dom/)** - Custom DOM matchers
-
-### **Test Commands**
-```bash
-# Run tests in watch mode
-npm run test
-
-# Run tests once
-npm run test:run
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run tests with UI
-npm run test:ui
+// Delete Task
+onMutate: async (taskId) => {
+  // فوری حذف می‌کنه
+  queryClient.setQueryData(targetQueryKey, (oldTasks) =>
+    oldTasks?.filter(task => task.id !== taskId)
+  )
+}
 ```
 
-### **Coverage Reports**
-- **Statements**: 4.72% (Initial setup)
-- **Branches**: 49.27%
-- **Functions**: 44.44%
-- **Lines**: 4.72%
+### 🔄 **Error Handling & Rollback**
+- اگه خطا بده، به حالت قبل برمی‌گرده
+- Real data از سرور جایگزین temp data میشه
+- UI هیچ وقت در حالت نامعلوم نمی‌مونه
 
-### **Test Files**
-- ✅ **LoadingSpinner** - Component rendering and props
-- ✅ **Button** - Variants, sizes, events, and accessibility
-- 🔄 **More tests coming soon** - Route guards, stores, and pages
+### 🎨 **TaskActions Component**
+- **Inline editing** - click to edit
+- **Status toggle** - click badges to change status  
+- **Delete confirmation** - با confirm dialog
+- **Real-time feedback** - loading states + error messages
 
----
+## 🔧 ویژگی‌ها
 
-## 📈 Performance
+- ✅ **Type Safety** - کامل با TypeScript
+- ✅ **Optimistic Updates** - فوری برای همه عملیات
+- ✅ **Error Rollback** - برگرداندن در صورت خطا
+- ✅ **Real-time Ready** - آماده برای Supabase Realtime
+- ✅ **Loading States** - مدیریت وضعیت بارگذاری
+- ✅ **Persian UI** - رابط کاربری فارسی
+- ✅ **Interactive** - edit, delete, status change
 
-### **Optimizations**
-- **Code Splitting** - Lazy loading with React.lazy()
-- **Route-based Splitting** - Automatic code splitting by routes
-- **Component Optimization** - Memoization and efficient re-renders
-- **Bundle Analysis** - Optimized bundle size
+## 🎯 UX بهبودها
 
-### **Best Practices**
-- TypeScript for type safety
-- ESLint and Prettier for code quality
-- Professional error handling
-- Responsive design patterns
+1. **فوری بودن** - کاربر انتظار نمی‌کشه
+2. **قابل اعتماد** - اگه خطا بده rollback میشه
+3. **تعاملی** - click to edit, click to change status
+4. **بصری** - loading spinners + error messages
+5. **بهینه** - کمترین network requests
 
----
+## 🚀 مرحله بعدی
 
-## 🤝 Contributing
-
-1. **Fork** the repository
-2. **Create** your feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`npm run commit`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### **Code Style**
-- Follow existing TypeScript and React patterns
-- Use conventional commits
-- Add proper TypeScript types
-- Follow component naming conventions
-
----
-
-## 📚 Documentation
-
-- [API Documentation](./docs/api.md) *(Coming Soon)*
-- [Component Guide](./docs/components.md) *(Coming Soon)*
-- [Deployment Guide](./docs/deployment.md) *(Coming Soon)*
-
----
-
-## 🌐 Deployment
-
-### **Build for Production**
-```bash
-npm run build
-```
-
-### **Deployment Platforms**
-- **Vercel** - Recommended for React apps
-- **Netlify** - Easy static deployment
-- **GitHub Pages** - Free hosting option
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- [shadcn/ui](https://ui.shadcn.com/) for the amazing component library
-- [React](https://reactjs.org/) team for the incredible framework
-- [Vite](https://vitejs.dev/) for the blazing fast build tool
-- [TailwindCSS](https://tailwindcss.com/) for the utility-first CSS
-
----
-
-<div align="center">
-
-**Built with ❤️ using modern web technologies**
-
-⭐ **Star this repository if you find it helpful!** ⭐
-
-</div>
+- اضافه کردن Authentication
+- پیاده‌سازی Realtime updates
+- اضافه کردن فیلترینگ و جستجو
+- بهبود UI/UX with animations
