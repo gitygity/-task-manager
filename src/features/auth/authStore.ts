@@ -4,11 +4,12 @@ import { authService } from './services/authService'
 import type { AuthState } from './types'
 import type { User } from './types'
 
+
 interface AuthStore extends AuthState {
   // Additional state
   error: string | null
   _initialized?: boolean
-  _subscription?: any
+  _subscription?: { unsubscribe: () => void } | null
   // Actions
   setUser: (user: User | null) => void
   setAuthenticated: (isAuthenticated: boolean) => void
