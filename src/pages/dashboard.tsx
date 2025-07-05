@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { navigate } from '@/routes/utils'
+import { TaskStats } from '@/features/tasks'
 
 const stats = [
   {
@@ -74,7 +76,10 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats Cards */}
+      {/* Task Statistics */}
+      <TaskStats />
+
+      {/* Overview Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.title}>
@@ -134,17 +139,40 @@ export default function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button className="w-full" variant="default">
+            <Button 
+              className="w-full" 
+              variant="default"
+              onClick={() => navigate.createTask()}
+            >
               Create New Task
             </Button>
-            <Button className="w-full" variant="outline">
+            <Button 
+              className="w-full" 
+              variant="outline"
+              onClick={() => navigate.kanban()}
+            >
+              Open Kanban Board
+            </Button>
+            <Button 
+              className="w-full" 
+              variant="outline"
+              onClick={() => navigate.createProject()}
+            >
               Start New Project
             </Button>
-            <Button className="w-full" variant="outline">
-              View Reports
+            <Button 
+              className="w-full" 
+              variant="outline"
+              onClick={() => navigate.projects()}
+            >
+              View All Projects
             </Button>
-            <Button className="w-full" variant="ghost">
-              Team Settings
+            <Button 
+              className="w-full" 
+              variant="ghost"
+              onClick={() => navigate.profile()}
+            >
+              Profile Settings
             </Button>
           </CardContent>
         </Card>

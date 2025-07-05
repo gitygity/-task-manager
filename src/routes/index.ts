@@ -1,16 +1,21 @@
-// Routes module exports
-export { default as AppRouter } from './Router'
-export { router } from './routerInstance'
+// Route system exports
+export { ROUTE_PATHS, ROUTE_META, DEFAULT_ROUTES } from './constants'
+export { navigate, isPublicRoute, isPrivateRoute, isAdminRoute } from './utils'
+export { SmartLayoutGuard } from './guards'
+export { Router } from './Router'
 export { routes } from './config'
-export { ROUTE_PATHS, ROUTE_META, NAVIGATION_GROUPS } from './constants'
-export { AuthGuard, GuestGuard, AdminGuard, SmartLayoutGuard } from './guards'
-export { 
-  navigate, 
-  routeBuilders,
-  getBreadcrumbs, 
-  isValidRoute, 
-  canAccessRoute, 
-  queryParams, 
-  analyzeCurrentRoute 
-} from './utils'
-export type { AppRoutes, RouteKeys, RouteMeta, NavigationItem, NavigationGroup } from './types' 
+
+// Type exports
+export type { 
+  RouteConfig, 
+  RoutePaths, 
+  RouteParams, 
+  RouteGuardConfig,
+  RouteKeys, 
+  RouteMeta, 
+  NavigationItem, 
+  NavigationGroup 
+} from './types'
+
+// Default export for convenience
+export { Router as default } from './Router' 

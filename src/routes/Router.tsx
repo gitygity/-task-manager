@@ -1,34 +1,18 @@
 // Main router setup with error boundaries and route tracking
-import { useEffect } from 'react'
-import { RouterProvider, useLocation } from 'react-router-dom'
-import { router } from './routerInstance'
-import { ROUTE_META } from './constants'
-import ErrorBoundary from '../components/ErrorBoundary'
+import { Suspense } from 'react'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { routes } from './config'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
-// Route tracker for analytics and page titles
-function RouteTracker() {
-  const location = useLocation()
+const router = createBrowserRouter(routes)
 
-  useEffect(() => {
-    // Update page title
-    const routeMeta = ROUTE_META[location.pathname as keyof typeof ROUTE_META]
-    if (routeMeta) {
-      document.title = routeMeta.title
-    }
-
-    // Custom analytics tracking
-    // Route analytics would be implemented here if needed
-  }, [location])
-
-  return null
-}
-
-// Main router component
-export default function AppRouter() {
+export function Router() {
   return (
     <ErrorBoundary>
-      <RouterProvider router={router} />
-      <RouteTracker />
+      <Suspense fallback={<LoadingSpinner />}>
+        <RouterProvider router={router} />
+      </Suspense>
     </ErrorBoundary>
   )
 }

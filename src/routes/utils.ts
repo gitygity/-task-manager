@@ -1,5 +1,4 @@
 // Route utilities and helper functions
-import { router } from './routerInstance'
 import { ROUTE_PATHS, ROUTE_META } from './constants'
 
 // Dynamic route builders - centralized logic
@@ -8,45 +7,39 @@ export const routeBuilders = {
   taskEdit: (id: string) => `/tasks/${id}/edit`,
   project: (id: string) => `/projects/${id}`,
   projectEdit: (id: string) => `/projects/${id}/edit`,
-  resetPassword: (token: string) => `/reset-password/${token}`,
 } as const
 
-// Navigation utilities
+// Navigation utilities that return paths (to be used with useNavigate)
 export const navigate = {
   // Public routes
-  home: () => router.navigate(ROUTE_PATHS.public.landing),
-  login: () => router.navigate(ROUTE_PATHS.public.auth.login),
-  register: () => router.navigate(ROUTE_PATHS.public.auth.register),
+  login: () => ROUTE_PATHS.public.login,
+  register: () => ROUTE_PATHS.public.register,
   
   // Dashboard routes
-  dashboard: () => router.navigate(ROUTE_PATHS.private.dashboard),
+  dashboard: () => ROUTE_PATHS.private.dashboard,
   
   // Task routes
-  tasks: () => router.navigate(ROUTE_PATHS.private.tasks.list),
-  createTask: () => router.navigate(ROUTE_PATHS.private.tasks.create),
-  taskDetails: (id: string) => router.navigate(routeBuilders.task(id)),
-  editTask: (id: string) => router.navigate(routeBuilders.taskEdit(id)),
+  tasks: () => ROUTE_PATHS.private.tasks.list,
+  createTask: () => ROUTE_PATHS.private.tasks.create,
+  taskDetails: (id: string) => routeBuilders.task(id),
+  editTask: (id: string) => routeBuilders.taskEdit(id),
+  kanban: () => ROUTE_PATHS.private.tasks.kanban,
   
   // Project routes
-  projects: () => router.navigate(ROUTE_PATHS.private.projects.list),
-  createProject: () => router.navigate(ROUTE_PATHS.private.projects.create),
-  projectDetails: (id: string) => router.navigate(routeBuilders.project(id)),
-  editProject: (id: string) => router.navigate(routeBuilders.projectEdit(id)),
+  projects: () => ROUTE_PATHS.private.projects.list,
+  createProject: () => ROUTE_PATHS.private.projects.create,
+  projectDetails: (id: string) => routeBuilders.project(id),
+  editProject: (id: string) => routeBuilders.projectEdit(id),
   
   // Profile routes
-  profile: () => router.navigate(ROUTE_PATHS.private.profile.settings),
-  preferences: () => router.navigate(ROUTE_PATHS.private.profile.preferences),
-  security: () => router.navigate(ROUTE_PATHS.private.profile.security),
+  profile: () => ROUTE_PATHS.private.profile.settings,
+  preferences: () => ROUTE_PATHS.private.profile.preferences,
+  security: () => ROUTE_PATHS.private.profile.security,
   
   // Admin routes
-  adminUsers: () => router.navigate(ROUTE_PATHS.private.admin.users),
-  adminAnalytics: () => router.navigate(ROUTE_PATHS.private.admin.analytics),
-  adminSettings: () => router.navigate(ROUTE_PATHS.private.admin.settings),
-  
-  // Navigation helpers
-  back: () => window.history.back(),
-  forward: () => window.history.forward(),
-  replace: (path: string) => router.navigate(path, { replace: true }),
+  adminUsers: () => ROUTE_PATHS.private.admin.users,
+  adminAnalytics: () => ROUTE_PATHS.private.admin.analytics,
+  adminSettings: () => ROUTE_PATHS.private.admin.settings,
 }
 
 // Breadcrumb utilities
@@ -116,14 +109,34 @@ export const isValidRoute = (path: string): boolean => {
   return false
 }
 
+// Check if route is public
+export const isPublicRoute = (path: string): boolean => {
+  const publicPaths = [
+    ROUTE_PATHS.public.login,
+    ROUTE_PATHS.public.register,
+    ROUTE_PATHS.public.forgotPassword,
+    '/',
+  ]
+  return publicPaths.includes(path)
+}
+
+// Check if route is private
+export const isPrivateRoute = (path: string): boolean => {
+  return !isPublicRoute(path) && !isAdminRoute(path)
+}
+
+// Check if route is admin-only
+export const isAdminRoute = (path: string): boolean => {
+  return path.startsWith('/admin')
+}
+
 // Permission checking
 export const canAccessRoute = (path: string, userRole?: string): boolean => {
-  if (path.startsWith('/admin')) {
+  if (isAdminRoute(path)) {
     return userRole === 'admin'
   }
   
-  const publicPaths = ['/', '/login', '/register', '/forgot-password', '/404']
-  if (publicPaths.includes(path) || path.startsWith('/reset-password/')) {
+  if (isPublicRoute(path)) {
     return true
   }
   

@@ -1,15 +1,21 @@
 // Main route configuration
 import type { RouteObject } from 'react-router-dom'
+import { Suspense } from 'react'
 import { AuthGuard, GuestGuard, AdminGuard, SmartLayoutGuard } from './guards'
 import { ROUTE_PATHS } from './constants'
+import LoadingSpinner from './components/LoadingSpinner'
 import {
-  LandingPage,
+  RootRedirect,
   LoginPage,
   RegisterPage,
   ForgotPasswordPage,
-  ResetPasswordPage,
   NotFoundPage,
   DashboardPage,
+  TasksListPage,
+  CreateTaskPage,
+  EditTaskPage,
+  TaskDetailsPage,
+  KanbanPage,
   ProjectsListPage,
   CreateProjectPage,
   EditProjectPage,
@@ -24,18 +30,22 @@ import {
 
 // Layouts
 import AuthLayout from '../layouts/AuthLayout'
-import PublicLayout from '../layouts/PublicLayout'
+
+// Utility function to wrap components in Suspense
+const withSuspense = (Component: React.ComponentType) => (
+  <Suspense fallback={<LoadingSpinner message="Loading..." />}>
+    <Component />
+  </Suspense>
+)
+
+// Root route - smart redirect (no suspense needed for this)
+const rootRoute: RouteObject = {
+  path: '/',
+  element: <RootRedirect />,
+}
 
 // Public routes configuration
 const publicRoutes: RouteObject[] = [
-  {
-    path: ROUTE_PATHS.public.landing,
-    element: (
-      <PublicLayout>
-        <LandingPage />
-      </PublicLayout>
-    ),
-  },
   {
     path: '',
     element: (
@@ -45,20 +55,16 @@ const publicRoutes: RouteObject[] = [
     ),
     children: [
       {
-        path: ROUTE_PATHS.public.auth.login,
-        element: <LoginPage />,
+        path: ROUTE_PATHS.public.login,
+        element: withSuspense(LoginPage),
       },
       {
-        path: ROUTE_PATHS.public.auth.register,
-        element: <RegisterPage />,
+        path: ROUTE_PATHS.public.register,
+        element: withSuspense(RegisterPage),
       },
       {
-        path: ROUTE_PATHS.public.auth.forgotPassword,
-        element: <ForgotPasswordPage />,
-      },
-      {
-        path: ROUTE_PATHS.public.auth.resetPassword,
-        element: <ResetPasswordPage />,
+        path: ROUTE_PATHS.public.forgotPassword,
+        element: withSuspense(ForgotPasswordPage),
       },
     ],
   },
@@ -77,41 +83,61 @@ const privateRoutes: RouteObject[] = [
       // Dashboard
       {
         path: ROUTE_PATHS.private.dashboard,
-        element: <DashboardPage />,
+        element: withSuspense(DashboardPage),
       },
       
-      // Tasks routes - integrated into dashboard
+      // Tasks routes
+      {
+        path: ROUTE_PATHS.private.tasks.list,
+        element: withSuspense(TasksListPage),
+      },
+      {
+        path: ROUTE_PATHS.private.tasks.create,
+        element: withSuspense(CreateTaskPage),
+      },
+      {
+        path: ROUTE_PATHS.private.tasks.details,
+        element: withSuspense(TaskDetailsPage),
+      },
+      {
+        path: ROUTE_PATHS.private.tasks.edit,
+        element: withSuspense(EditTaskPage),
+      },
+      {
+        path: ROUTE_PATHS.private.tasks.kanban,
+        element: withSuspense(KanbanPage),
+      },
       
       // Projects routes
       {
         path: ROUTE_PATHS.private.projects.list,
-        element: <ProjectsListPage />,
+        element: withSuspense(ProjectsListPage),
       },
       {
         path: ROUTE_PATHS.private.projects.create,
-        element: <CreateProjectPage />,
+        element: withSuspense(CreateProjectPage),
       },
       {
         path: ROUTE_PATHS.private.projects.details,
-        element: <ProjectDetailsPage />,
+        element: withSuspense(ProjectDetailsPage),
       },
       {
         path: ROUTE_PATHS.private.projects.edit,
-        element: <EditProjectPage />,
+        element: withSuspense(EditProjectPage),
       },
       
       // Profile routes
       {
         path: ROUTE_PATHS.private.profile.settings,
-        element: <ProfileSettingsPage />,
+        element: withSuspense(ProfileSettingsPage),
       },
       {
         path: ROUTE_PATHS.private.profile.preferences,
-        element: <ProfilePreferencesPage />,
+        element: withSuspense(ProfilePreferencesPage),
       },
       {
         path: ROUTE_PATHS.private.profile.security,
-        element: <ProfileSecurityPage />,
+        element: withSuspense(ProfileSecurityPage),
       },
       
       // Admin routes (protected by AdminGuard)
@@ -119,7 +145,7 @@ const privateRoutes: RouteObject[] = [
         path: ROUTE_PATHS.private.admin.users,
         element: (
           <AdminGuard>
-            <AdminUsersPage />
+            {withSuspense(AdminUsersPage)}
           </AdminGuard>
         ),
       },
@@ -127,7 +153,7 @@ const privateRoutes: RouteObject[] = [
         path: ROUTE_PATHS.private.admin.analytics,
         element: (
           <AdminGuard>
-            <AdminAnalyticsPage />
+            {withSuspense(AdminAnalyticsPage)}
           </AdminGuard>
         ),
       },
@@ -135,7 +161,7 @@ const privateRoutes: RouteObject[] = [
         path: ROUTE_PATHS.private.admin.settings,
         element: (
           <AdminGuard>
-            <AdminSettingsPage />
+            {withSuspense(AdminSettingsPage)}
           </AdminGuard>
         ),
       },
@@ -146,17 +172,14 @@ const privateRoutes: RouteObject[] = [
 // Error routes
 const errorRoutes: RouteObject[] = [
   {
-    path: ROUTE_PATHS.public.notFound,
-    element: <NotFoundPage />,
-  },
-  {
     path: '*',
-    element: <NotFoundPage />,
+    element: withSuspense(NotFoundPage),
   },
 ]
 
 // Main routes configuration
 export const routes: RouteObject[] = [
+  rootRoute,
   ...publicRoutes,
   ...privateRoutes,
   ...errorRoutes,

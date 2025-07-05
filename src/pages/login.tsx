@@ -1,11 +1,22 @@
 import { LoginForm } from '@/features/auth/components/LoginForm'
 import { useNavigate } from 'react-router-dom'
+import { startTransition } from 'react'
+import { ROUTE_PATHS } from '@/routes/constants'
 
 export default function LoginPage() {
   const navigate = useNavigate()
 
   const handleLoginSuccess = () => {
-    navigate('/', { replace: true })
+    // Redirect to dashboard after successful login with startTransition
+    startTransition(() => {
+      const redirectPath = sessionStorage.getItem('redirectPath')
+      if (redirectPath) {
+        sessionStorage.removeItem('redirectPath')
+        navigate(redirectPath, { replace: true })
+      } else {
+        navigate(ROUTE_PATHS.private.dashboard, { replace: true })
+      }
+    })
   }
 
   const handleSwitchToRegister = () => {

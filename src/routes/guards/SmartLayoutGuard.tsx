@@ -1,11 +1,11 @@
 // Smart layout guard - chooses layout based on user role
 import { useAuthStore } from '../../features/auth'
-import UserLayout from '../../layouts/UserLayout'
-import AdminLayout from '../../layouts/AdminLayout'
-import DashboardLayout from '../../layouts/DashboardLayout'
+import { UserLayout } from '../../layouts/UserLayout'
+import { AdminLayout } from '../../layouts/AdminLayout'
+import { DashboardLayout } from '../../layouts/DashboardLayout'
 import LoadingSpinner from '../components/LoadingSpinner'
 
-export default function SmartLayoutGuard() {
+export function SmartLayoutGuard() {
   const { user, loading } = useAuthStore()
 
   // Still loading user data
@@ -13,15 +13,20 @@ export default function SmartLayoutGuard() {
     return <LoadingSpinner message="Loading layout..." />
   }
 
-  // Choose layout based on user role
-  if (user?.user_metadata?.role === 'admin') {
-    return <AdminLayout />
-  }
-  
-  if (user?.user_metadata?.role === 'user') {
-    return <UserLayout />
+  // Check if user is authenticated
+  if (!user) {
+    return <LoadingSpinner message="Loading user..." />
   }
 
-  // Default layout for users without specific role or during role loading
-  return <DashboardLayout />
+  // Choose layout based on user role
+  const userRole = user.user_metadata?.role
+
+  if (userRole === 'admin') {
+    return <AdminLayout />
+  } else if (userRole === 'user') {
+    return <UserLayout />
+  } else {
+    // Default to DashboardLayout for guests or unknown roles
+    return <DashboardLayout />
+  }
 } 

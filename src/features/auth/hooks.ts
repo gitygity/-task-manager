@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { authService } from './services/authService'
+import type { UpdateProfileData, ChangePasswordData } from './services/authService'
 
 // Query keys
 export const AUTH_KEYS = {
@@ -56,5 +57,34 @@ export function useLogout() {
 export function useResetPassword() {
   return useMutation({
     mutationFn: authService.resetPassword,
+  })
+}
+
+// Hook for updating profile
+export function useUpdateProfile() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (profileData: UpdateProfileData) => authService.updateProfile(profileData),
+    onSuccess: (response) => {
+      if (response.user) {
+        // Invalidate user cache
+        queryClient.invalidateQueries({ queryKey: AUTH_KEYS.user() })
+      }
+    },
+  })
+}
+
+// Hook for changing password
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (passwordData: ChangePasswordData) => authService.changePassword(passwordData),
+  })
+}
+
+// Hook for updating email
+export function useUpdateEmail() {
+  return useMutation({
+    mutationFn: (newEmail: string) => authService.updateEmail(newEmail),
   })
 } 

@@ -7,6 +7,7 @@ export interface Task {
   status: 'todo' | 'in_progress' | 'completed'
   priority: 'low' | 'medium' | 'high' | 'urgent'
   parent_task_id?: string
+  project_id?: string
   due_date?: string
   created_at: Date
   updated_at: Date

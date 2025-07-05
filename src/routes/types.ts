@@ -1,16 +1,22 @@
 // Route types and interfaces
 
-// Main route structure interface
-export interface AppRoutes {
+export interface RouteConfig {
+  name: string
+  path: string
+  component: React.ComponentType
+  requiresAuth?: boolean
+  roles?: string[]
+  protected?: boolean
+  redirectTo?: string
+  exact?: boolean
+  metadata?: Record<string, unknown>
+}
+
+export interface RoutePaths {
   public: {
-    auth: {
-      login: string
-      register: string
-      forgotPassword: string
-      resetPassword: string
-    }
-    landing: string
-    notFound: string
+    login: string
+    register: string
+    forgotPassword: string
   }
   private: {
     dashboard: string
@@ -19,6 +25,7 @@ export interface AppRoutes {
       create: string
       edit: string
       details: string
+      kanban: string
     }
     projects: {
       list: string
@@ -32,11 +39,26 @@ export interface AppRoutes {
       security: string
     }
     admin: {
+      dashboard: string
       users: string
-      analytics: string
       settings: string
+      analytics: string
     }
   }
+}
+
+export interface RouteParams {
+  id?: string
+  userId?: string
+  projectId?: string
+  taskId?: string
+}
+
+export interface RouteGuardConfig {
+  requiresAuth: boolean
+  roles?: string[]
+  redirectTo?: string
+  middleware?: ((params: RouteParams) => boolean | Promise<boolean>)[]
 }
 
 // Route metadata interface
@@ -60,4 +82,4 @@ export interface NavigationGroup {
   requiresRole?: string
 }
 
-export type RouteKeys = keyof AppRoutes['public'] | keyof AppRoutes['private'] 
+export type RouteKeys = keyof RoutePaths['public'] | keyof RoutePaths['private'] 

@@ -1,6 +1,9 @@
 // Lazy loaded route components for code splitting
 import { lazy } from 'react'
 
+// Root redirect page
+export const RootRedirect = lazy(() => import('../pages/RootRedirect'))
+
 // Public pages
 export const LandingPage = lazy(() => import('../pages/LandingPage'))
 export const LoginPage = lazy(() => import('../pages/login'))
@@ -13,7 +16,11 @@ export const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
 export const DashboardPage = lazy(() => import('../pages/dashboard'))
 
 // Private pages - Tasks
-// Task pages removed - using integrated KanbanBoard instead
+export const TasksListPage = lazy(() => import('../pages/tasks/TasksListPage'))
+export const CreateTaskPage = lazy(() => import('../pages/tasks/CreateTaskPage'))
+export const EditTaskPage = lazy(() => import('../pages/tasks/EditTaskPage'))
+export const TaskDetailsPage = lazy(() => import('../pages/tasks/TaskDetailsPage'))
+export const KanbanPage = lazy(() => import('../pages/tasks/KanbanPage'))
 
 // Private pages - Projects
 export const ProjectsListPage = lazy(() => import('../pages/projects/ProjectsListPage'))

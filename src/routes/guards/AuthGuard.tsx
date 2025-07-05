@@ -1,45 +1,36 @@
 // Authentication guard - protects private routes
-import { useEffect } from 'react'
+import { useAuthStore } from '@/features/auth'
 import { Navigate, useLocation } from 'react-router-dom'
-import { useAuthStore } from '../../features/auth'
 import { ROUTE_PATHS } from '../constants'
-import LoadingSpinner from '../components/LoadingSpinner'
+import type { ReactNode } from 'react'
 
 interface AuthGuardProps {
-  children: React.ReactNode
+  children: ReactNode
   fallback?: string
 }
 
-export default function AuthGuard({ 
+export function AuthGuard({ 
   children, 
-  fallback = ROUTE_PATHS.public.auth.login 
+  fallback = ROUTE_PATHS.public.login 
 }: AuthGuardProps) {
-  const { isAuthenticated, loading } = useAuthStore()
+  const { user, loading } = useAuthStore()
   const location = useLocation()
 
-  // Store the attempted location for redirect after login
-  useEffect(() => {
-    if (!isAuthenticated && location.pathname !== ROUTE_PATHS.public.auth.login) {
-      sessionStorage.setItem('redirectPath', location.pathname)
-    }
-  }, [isAuthenticated, location.pathname])
+  // Don't redirect if we're already on the login page
+  if (!user && !loading && location.pathname !== ROUTE_PATHS.public.login) {
+    return <Navigate to={fallback} state={{ from: location }} replace />
+  }
 
-  // Still loading authentication status
+  // Show loading while auth is being checked
   if (loading) {
-    return <LoadingSpinner message="Checking authentication..." />
+    return <div>Loading...</div>
   }
 
-  // Not authenticated - redirect to login
-  if (!isAuthenticated) {
-    return (
-      <Navigate 
-        to={fallback} 
-        state={{ from: location.pathname }} 
-        replace 
-      />
-    )
+  // If user is authenticated, render children
+  if (user) {
+    return <>{children}</>
   }
 
-  // Authenticated - render children
+  // If not authenticated and not loading, redirect will happen above
   return <>{children}</>
 } 

@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { LoaderCircle, Flag, Save, X } from 'lucide-react'
 import { TASK_PRIORITIES } from '../types'
+import { ProjectSelector } from './ProjectSelector'
 import type { Task, UpdateTaskData } from '../types'
 
 interface TaskEditModalProps {
@@ -20,6 +21,7 @@ export function TaskEditModal({ task, isOpen, onClose }: TaskEditModalProps) {
   const [editDescription, setEditDescription] = useState(task?.description || '')
   const [editPriority, setEditPriority] = useState<Task['priority']>(task?.priority || 'medium')
   const [editStatus, setEditStatus] = useState<Task['status']>(task?.status || 'todo')
+  const [editProjectId, setEditProjectId] = useState<string>(task?.project_id || '')
   
   const updateTask = useUpdateTask()
 
@@ -30,6 +32,7 @@ export function TaskEditModal({ task, isOpen, onClose }: TaskEditModalProps) {
       setEditDescription(task.description || '')
       setEditPriority(task.priority)
       setEditStatus(task.status)
+      setEditProjectId(task.project_id || '')
     }
   }, [task])
 
@@ -53,12 +56,16 @@ export function TaskEditModal({ task, isOpen, onClose }: TaskEditModalProps) {
     if (editStatus !== task.status) {
       updates.status = editStatus
     }
+
+    if (editProjectId !== (task.project_id || '')) {
+      updates.project_id = editProjectId || undefined
+    }
     
     if (Object.keys(updates).length > 0) {
       try {
         await updateTask.mutateAsync({
           taskId: task.id,
-          updates
+          taskData: updates
         })
         onClose()
       } catch (error) {
@@ -75,6 +82,7 @@ export function TaskEditModal({ task, isOpen, onClose }: TaskEditModalProps) {
       setEditDescription(task.description || '')
       setEditPriority(task.priority)
       setEditStatus(task.status)
+      setEditProjectId(task.project_id || '')
     }
     onClose()
   }
@@ -106,6 +114,15 @@ export function TaskEditModal({ task, isOpen, onClose }: TaskEditModalProps) {
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
               placeholder="توضیحات..."
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="edit-project">پروژه</Label>
+            <ProjectSelector
+              value={editProjectId}
+              onValueChange={setEditProjectId}
+              placeholder="انتخاب پروژه..."
             />
           </div>
 

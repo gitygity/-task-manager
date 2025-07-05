@@ -30,4 +30,25 @@ export interface AuthState {
 export interface AuthResponse {
   user: User | null
   error?: string
+}
+
+export interface UserPreferences {
+  theme: 'light' | 'dark' | 'system'
+  language: 'en' | 'fa'
+  notifications: {
+    email: boolean
+    push: boolean
+    taskReminders: boolean
+    projectUpdates: boolean
+  }
+  dateFormat: 'mm/dd/yyyy' | 'dd/mm/yyyy' | 'yyyy/mm/dd'
+  timezone: string
+  defaultTaskPriority: 'low' | 'medium' | 'high' | 'urgent'
+  kanbanAutoRefresh: boolean
+}
+
+export interface PreferencesState {
+  preferences: UserPreferences
+  loading: boolean
+  error: string | null
 } 

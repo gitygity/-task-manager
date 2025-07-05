@@ -21,6 +21,7 @@ import { useState, memo } from 'react'
 import { useCreateSubtask } from '../hooks'
 import { useAuthStore } from '@/features/auth'
 import { Input } from '@/components/ui/input'
+import { ProjectName } from './ProjectName'
 
 interface KanbanCardProps {
   task: Task
@@ -146,6 +147,11 @@ function KanbanCardComponent({
                 <span>{completedSubtasks}/{task.subtasks!.length}</span>
               </div>
             )}
+          </div>
+
+          {/* Project Name */}
+          <div className="mb-2 pointer-events-none">
+            <ProjectName projectId={task.project_id} />
           </div>
 
           {/* Footer */}

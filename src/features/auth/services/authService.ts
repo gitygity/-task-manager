@@ -1,6 +1,16 @@
 import { supabase } from '@/lib/supabase'
 import type { User, LoginData, RegisterData, AuthResponse } from '../types'
 
+export interface UpdateProfileData {
+  full_name?: string
+  avatar_url?: string
+}
+
+export interface ChangePasswordData {
+  currentPassword: string
+  newPassword: string
+}
+
 export const authService = {
   // Get current user
   async getCurrentUser(): Promise<User | null> {
@@ -89,6 +99,89 @@ export const authService = {
       return { 
         user: null, 
         error: error instanceof Error ? error.message : 'Registration failed' 
+      }
+    }
+  },
+
+  // Update user profile
+  async updateProfile(profileData: UpdateProfileData): Promise<AuthResponse> {
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        data: profileData
+      })
+
+      if (error) {
+        return { user: null, error: error.message }
+      }
+
+      const user: User = {
+        id: data.user.id,
+        email: data.user.email!,
+        user_metadata: data.user.user_metadata,
+        created_at: data.user.created_at!,
+        updated_at: data.user.updated_at!
+      }
+
+      return { user }
+    } catch (error) {
+      return { 
+        user: null, 
+        error: error instanceof Error ? error.message : 'Profile update failed' 
+      }
+    }
+  },
+
+  // Change password
+  async changePassword(passwordData: ChangePasswordData): Promise<{ error?: string }> {
+    try {
+      // First verify current password by attempting to sign in
+      const { data: { user: currentUser } } = await supabase.auth.getUser()
+      if (!currentUser) {
+        return { error: 'Not authenticated' }
+      }
+
+      // Verify current password
+      const { error: verifyError } = await supabase.auth.signInWithPassword({
+        email: currentUser.email!,
+        password: passwordData.currentPassword,
+      })
+
+      if (verifyError) {
+        return { error: 'Current password is incorrect' }
+      }
+
+      // Update password
+      const { error } = await supabase.auth.updateUser({
+        password: passwordData.newPassword
+      })
+
+      if (error) {
+        return { error: error.message }
+      }
+
+      return {}
+    } catch (error) {
+      return { 
+        error: error instanceof Error ? error.message : 'Password change failed' 
+      }
+    }
+  },
+
+  // Update email
+  async updateEmail(newEmail: string): Promise<{ error?: string }> {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        email: newEmail
+      })
+
+      if (error) {
+        return { error: error.message }
+      }
+
+      return {}
+    } catch (error) {
+      return { 
+        error: error instanceof Error ? error.message : 'Email update failed' 
       }
     }
   },

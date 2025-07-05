@@ -1,68 +1,66 @@
 import { Outlet } from 'react-router-dom'
-import { Suspense } from 'react'
-import { useAuthStore } from '../features/auth'
-import LoadingSpinner from '../routes/components/LoadingSpinner'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { cn } from '@/lib/utils'
+import { NavigationMenu, UserMenu } from '@/components/navigation/NavigationMenu'
+import { Card } from '@/components/ui/card'
+import { Bell, Search } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
-const navigationItems = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/tasks", label: "Tasks" },
-]
-
-export default function DashboardLayout() {
-  const { user } = useAuthStore()
-
+export function DashboardLayout() {
   return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-background border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <h1 className="text-xl font-semibold">Task Manager</h1>
-            
-            {/* Generic Navigation */}
-            <nav className="hidden md:flex space-x-1">
-              {navigationItems.map((item) => (
-                <a 
-                  key={item.href}
-                  href={item.href} 
-                  className={cn(
-                    "text-muted-foreground hover:text-foreground hover:bg-accent",
-                    "px-3 py-2 text-sm font-medium rounded-md transition-colors"
-                  )}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center text-primary-foreground font-bold">
+                T
+              </div>
+              <span className="text-xl font-bold text-foreground">TaskManager</span>
+            </div>
 
-            {/* User Info */}
-            <div className="flex items-center space-x-3">
-              <div className="text-sm">
-                <span className="text-muted-foreground">Welcome, </span>
-                <span className="font-medium">{user?.user_metadata?.full_name || 'Guest'}</span>
+            {/* Navigation */}
+            <NavigationMenu variant="horizontal" className="hidden md:flex" />
+
+            {/* Right side */}
+            <div className="flex items-center gap-4">
+              {/* Search */}
+              <div className="relative hidden sm:block">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search..."
+                  className="w-64 pl-10"
+                />
               </div>
-              
-              <Separator orientation="vertical" className="h-6" />
-              
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                  <span className="text-muted-foreground text-sm font-medium">
-                    {user?.user_metadata?.full_name?.charAt(0) || '?'}
-                  </span>
-                </div>
-                <Badge variant="outline" className="text-xs">Guest</Badge>
-              </div>
+
+              {/* Notifications */}
+              <Button variant="ghost" size="icon">
+                <Bell className="h-5 w-5" />
+                <span className="sr-only">Notifications</span>
+              </Button>
+
+              {/* User Menu */}
+              <UserMenu />
             </div>
           </div>
         </div>
       </header>
-      
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <Suspense fallback={<LoadingSpinner message="Loading dashboard..." />}>
-          <Outlet />
-        </Suspense>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden border-b bg-background">
+        <div className="container mx-auto px-4 py-2">
+          <NavigationMenu variant="horizontal" className="overflow-x-auto" />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card className="min-h-[calc(100vh-12rem)] shadow-lg">
+          <div className="p-6">
+            <Outlet />
+          </div>
+        </Card>
       </main>
     </div>
   )

@@ -1,17 +1,11 @@
-// Route constants - centralized route management
-import type { AppRoutes } from './types'
+// Route constants and configurations
+import type { RoutePaths } from './types'
 
-// Base route constants
-export const ROUTE_PATHS: AppRoutes = {
+export const ROUTE_PATHS: RoutePaths = {
   public: {
-    auth: {
-      login: '/login',
-      register: '/register',
-      forgotPassword: '/forgot-password',
-      resetPassword: '/reset-password/:token',
-    },
-    landing: '/',
-    notFound: '/404',
+    login: '/login',
+    register: '/register',
+    forgotPassword: '/forgot-password',
   },
   private: {
     dashboard: '/dashboard',
@@ -20,10 +14,11 @@ export const ROUTE_PATHS: AppRoutes = {
       create: '/tasks/create',
       edit: '/tasks/:id/edit',
       details: '/tasks/:id',
+      kanban: '/tasks/kanban',
     },
     projects: {
       list: '/projects',
-      create: '/projects/create', 
+      create: '/projects/create',
       edit: '/projects/:id/edit',
       details: '/projects/:id',
     },
@@ -33,116 +28,123 @@ export const ROUTE_PATHS: AppRoutes = {
       security: '/profile/security',
     },
     admin: {
+      dashboard: '/admin/dashboard',
       users: '/admin/users',
-      analytics: '/admin/analytics',
       settings: '/admin/settings',
+      analytics: '/admin/analytics',
     },
   },
-} as const
+}
 
-// Enhanced route metadata
+// Route metadata for SEO and navigation
 export const ROUTE_META = {
-  [ROUTE_PATHS.public.landing]: {
-    title: 'Welcome to Task Manager',
-    breadcrumb: 'Home',
-    description: 'Task management application home page',
+  [ROUTE_PATHS.public.login]: {
+    title: 'ورود',
+    description: 'وارد حساب کاربری خود شوید',
+    breadcrumb: 'ورود',
   },
-  [ROUTE_PATHS.public.auth.login]: {
-    title: 'Login - Task Manager',
-    breadcrumb: 'Login',
-    description: 'User login page',
+  [ROUTE_PATHS.public.register]: {
+    title: 'ثبت نام',
+    description: 'حساب کاربری جدید ایجاد کنید',
+    breadcrumb: 'ثبت نام',
   },
-  [ROUTE_PATHS.public.auth.register]: {
-    title: 'Register - Task Manager',
-    breadcrumb: 'Register',
-    description: 'User registration page',
-  },
-  [ROUTE_PATHS.public.auth.forgotPassword]: {
-    title: 'Forgot Password - Task Manager',
-    breadcrumb: 'Forgot Password',
-    description: 'Password recovery page',
+  [ROUTE_PATHS.public.forgotPassword]: {
+    title: 'فراموشی رمز عبور',
+    description: 'بازیابی رمز عبور',
+    breadcrumb: 'فراموشی رمز عبور',
   },
   [ROUTE_PATHS.private.dashboard]: {
-    title: 'Dashboard - Task Manager',
-    breadcrumb: 'Dashboard',
-    description: 'Main dashboard',
+    title: 'داشبورد',
+    description: 'نمای کلی پروژه‌ها و وظایف',
+    breadcrumb: 'داشبورد',
   },
   [ROUTE_PATHS.private.tasks.list]: {
-    title: 'Tasks - Task Manager',
-    breadcrumb: 'Tasks',
-    description: 'Task list and management',
+    title: 'وظایف',
+    description: 'مدیریت وظایف',
+    breadcrumb: 'وظایف',
   },
   [ROUTE_PATHS.private.tasks.create]: {
-    title: 'Create Task - Task Manager',
-    breadcrumb: 'Create Task',
-    description: 'Create new task',
+    title: 'ایجاد وظیفه',
+    description: 'ایجاد وظیفه جدید',
+    breadcrumb: 'ایجاد وظیفه',
+  },
+  [ROUTE_PATHS.private.tasks.edit]: {
+    title: 'ویرایش وظیفه',
+    description: 'ویرایش وظیفه',
+    breadcrumb: 'ویرایش وظیفه',
+  },
+  [ROUTE_PATHS.private.tasks.details]: {
+    title: 'جزئیات وظیفه',
+    description: 'مشاهده جزئیات وظیفه',
+    breadcrumb: 'جزئیات وظیفه',
+  },
+  [ROUTE_PATHS.private.tasks.kanban]: {
+    title: 'تابلوی کانبان',
+    description: 'مدیریت وظایف با تابلوی کانبان',
+    breadcrumb: 'تابلوی کانبان',
   },
   [ROUTE_PATHS.private.projects.list]: {
-    title: 'Projects - Task Manager',
-    breadcrumb: 'Projects',
-    description: 'Project list and management',
+    title: 'پروژه‌ها',
+    description: 'مدیریت پروژه‌ها',
+    breadcrumb: 'پروژه‌ها',
   },
   [ROUTE_PATHS.private.projects.create]: {
-    title: 'Create Project - Task Manager',
-    breadcrumb: 'Create Project',
-    description: 'Create new project',
+    title: 'ایجاد پروژه',
+    description: 'ایجاد پروژه جدید',
+    breadcrumb: 'ایجاد پروژه',
+  },
+  [ROUTE_PATHS.private.projects.edit]: {
+    title: 'ویرایش پروژه',
+    description: 'ویرایش پروژه',
+    breadcrumb: 'ویرایش پروژه',
+  },
+  [ROUTE_PATHS.private.projects.details]: {
+    title: 'جزئیات پروژه',
+    description: 'مشاهده جزئیات پروژه',
+    breadcrumb: 'جزئیات پروژه',
   },
   [ROUTE_PATHS.private.profile.settings]: {
-    title: 'Profile Settings - Task Manager',
-    breadcrumb: 'Profile Settings',
-    description: 'User profile configuration',
+    title: 'تنظیمات پروفایل',
+    description: 'تنظیمات حساب کاربری',
+    breadcrumb: 'تنظیمات پروفایل',
   },
   [ROUTE_PATHS.private.profile.preferences]: {
-    title: 'Preferences - Task Manager',
-    breadcrumb: 'Preferences',
-    description: 'User preferences and settings',
+    title: 'تنظیمات کاربری',
+    description: 'تنظیمات شخصی‌سازی',
+    breadcrumb: 'تنظیمات کاربری',
   },
   [ROUTE_PATHS.private.profile.security]: {
-    title: 'Security Settings - Task Manager',
-    breadcrumb: 'Security',
-    description: 'Security and privacy settings',
+    title: 'امنیت',
+    description: 'تنظیمات امنیتی',
+    breadcrumb: 'امنیت',
+  },
+  [ROUTE_PATHS.private.admin.dashboard]: {
+    title: 'داشبورد ادمین',
+    description: 'پنل مدیریت',
+    breadcrumb: 'داشبورد ادمین',
   },
   [ROUTE_PATHS.private.admin.users]: {
-    title: 'User Management - Task Manager',
-    breadcrumb: 'Users',
-    description: 'Admin user management',
-  },
-  [ROUTE_PATHS.private.admin.analytics]: {
-    title: 'Analytics - Task Manager',
-    breadcrumb: 'Analytics',
-    description: 'Admin analytics dashboard',
+    title: 'مدیریت کاربران',
+    description: 'مدیریت کاربران سیستم',
+    breadcrumb: 'مدیریت کاربران',
   },
   [ROUTE_PATHS.private.admin.settings]: {
-    title: 'Admin Settings - Task Manager',
-    breadcrumb: 'Settings',
-    description: 'System administration settings',
+    title: 'تنظیمات سیستم',
+    description: 'تنظیمات کلی سیستم',
+    breadcrumb: 'تنظیمات سیستم',
+  },
+  [ROUTE_PATHS.private.admin.analytics]: {
+    title: 'تحلیلات',
+    description: 'گزارشات و تحلیلات',
+    breadcrumb: 'تحلیلات',
   },
 } as const
 
-// Navigation groups for sidebar/menu organization
-export const NAVIGATION_GROUPS = [
-  {
-    label: 'Main',
-    routes: [
-      { path: ROUTE_PATHS.private.dashboard, label: 'Dashboard', icon: 'dashboard' },
-      { path: ROUTE_PATHS.private.tasks.list, label: 'Tasks', icon: 'task' },
-      { path: ROUTE_PATHS.private.projects.list, label: 'Projects', icon: 'project' },
-    ],
-  },
-  {
-    label: 'Personal',
-    routes: [
-      { path: ROUTE_PATHS.private.profile.settings, label: 'Profile', icon: 'user' },
-      { path: ROUTE_PATHS.private.profile.preferences, label: 'Preferences', icon: 'settings' },
-    ],
-  },
-  {
-    label: 'Administration',
-    routes: [
-      { path: ROUTE_PATHS.private.admin.users, label: 'Users', icon: 'users' },
-      { path: ROUTE_PATHS.private.admin.analytics, label: 'Analytics', icon: 'chart' },
-      { path: ROUTE_PATHS.private.admin.settings, label: 'Settings', icon: 'cog' },
-    ],
-    requiresRole: 'admin',
-  },
-] as const 
+// Default route configurations
+export const DEFAULT_ROUTES = {
+  AUTHENTICATED: ROUTE_PATHS.private.dashboard,
+  UNAUTHENTICATED: ROUTE_PATHS.public.login,
+  ADMIN: ROUTE_PATHS.private.admin.dashboard,
+  AFTER_LOGIN: ROUTE_PATHS.private.dashboard,
+  AFTER_LOGOUT: ROUTE_PATHS.public.login,
+} as const 

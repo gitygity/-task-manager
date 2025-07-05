@@ -3,12 +3,17 @@ import type { Task, CreateTaskData, UpdateTaskData, TaskWithSubtasks, CreateSubt
 
 export const taskService = {
   // دریافت تمام تسکهای کاربر با ساختار سلسله مراتبی
-  async getTasks(userId: string): Promise<Task[]> {
-    const { data, error } = await supabase
+  async getTasks(userId: string, projectId?: string): Promise<Task[]> {
+    let query = supabase
       .from('tasks')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false })
+
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false })
 
     if (error) {
       throw new Error(`Failed to fetch tasks: ${error.message}`)
@@ -19,13 +24,51 @@ export const taskService = {
     return this.organizeTasksHierarchically(tasks)
   },
 
-  // دریافت تسکهای اصلی (بدون parent)
-  async getMainTasks(userId: string): Promise<TaskWithSubtasks[]> {
+  // دریافت تسکهای مربوط به یک پروژه خاص
+  async getTasksByProject(userId: string, projectId: string): Promise<Task[]> {
     const { data, error } = await supabase
       .from('tasks')
       .select('*')
       .eq('user_id', userId)
+      .eq('project_id', projectId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      throw new Error(`Failed to fetch tasks for project: ${error.message}`)
+    }
+
+    return data || []
+  },
+
+  // دریافت تسکهای بدون پروژه
+  async getTasksWithoutProject(userId: string): Promise<Task[]> {
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .eq('user_id', userId)
+      .is('project_id', null)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      throw new Error(`Failed to fetch tasks without project: ${error.message}`)
+    }
+
+    return data || []
+  },
+
+  // دریافت تسکهای اصلی (بدون parent)
+  async getMainTasks(userId: string, projectId?: string): Promise<TaskWithSubtasks[]> {
+    let query = supabase
+      .from('tasks')
+      .select('*')
+      .eq('user_id', userId)
       .is('parent_task_id', null)
+
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+
+    const { data, error } = await query
       .order('priority', { ascending: false })
       .order('created_at', { ascending: false })
 
@@ -206,7 +249,7 @@ export const taskService = {
   },
 
   // آمار تسکها
-  async getTaskStats(userId: string): Promise<{
+  async getTaskStats(userId: string, projectId?: string): Promise<{
     total: number
     completed: number
     inProgress: number
@@ -215,10 +258,16 @@ export const taskService = {
     mainTasks: number
     subtasks: number
   }> {
-    const { data, error } = await supabase
+    let query = supabase
       .from('tasks')
       .select('status, priority, parent_task_id')
       .eq('user_id', userId)
+
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+
+    const { data, error } = await query
 
     if (error) {
       throw new Error(`Failed to fetch task stats: ${error.message}`)
@@ -242,5 +291,67 @@ export const taskService = {
     }
 
     return stats
+  },
+
+  // آمار تسکهای گروه‌بندی شده بر اساس پروژه
+  async getTasksByProjectStats(userId: string): Promise<{
+    projectId: string | null
+    projectTitle: string | null
+    totalTasks: number
+    completedTasks: number
+    inProgressTasks: number
+    todoTasks: number
+    completionPercentage: number
+  }[]> {
+    const { data, error } = await supabase
+      .from('project_tasks_stats')
+      .select('*')
+      .eq('user_id', userId)
+
+    if (error) {
+      throw new Error(`Failed to fetch project tasks stats: ${error.message}`)
+    }
+
+    const stats = data || []
+    
+    // شامل تسکهای بدون پروژه
+    const { data: tasksWithoutProject, error: tasksError } = await supabase
+      .from('tasks')
+      .select('status')
+      .eq('user_id', userId)
+      .is('project_id', null)
+
+    if (tasksError) {
+      throw new Error(`Failed to fetch tasks without project: ${tasksError.message}`)
+    }
+
+    const withoutProjectTasks = tasksWithoutProject || []
+    
+    if (withoutProjectTasks.length > 0) {
+      const completedCount = withoutProjectTasks.filter(t => t.status === 'completed').length
+      const inProgressCount = withoutProjectTasks.filter(t => t.status === 'in_progress').length
+      const todoCount = withoutProjectTasks.filter(t => t.status === 'todo').length
+      
+      stats.push({
+        project_id: null,
+        project_title: 'بدون پروژه',
+        total_tasks: withoutProjectTasks.length,
+        completed_tasks: completedCount,
+        in_progress_tasks: inProgressCount,
+        todo_tasks: todoCount,
+        completion_percentage: withoutProjectTasks.length > 0 ? 
+          Math.round((completedCount / withoutProjectTasks.length) * 100) : 0
+      })
+    }
+
+    return stats.map(stat => ({
+      projectId: stat.project_id,
+      projectTitle: stat.project_title,
+      totalTasks: stat.total_tasks,
+      completedTasks: stat.completed_tasks,
+      inProgressTasks: stat.in_progress_tasks,
+      todoTasks: stat.todo_tasks,
+      completionPercentage: stat.completion_percentage
+    }))
   }
 } 
