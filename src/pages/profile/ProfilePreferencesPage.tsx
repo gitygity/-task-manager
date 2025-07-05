@@ -91,7 +91,7 @@ export default function ProfilePreferencesPage() {
       URL.revokeObjectURL(url)
       
       setMessage({ type: 'success', text: 'تنظیمات با موفقیت دانلود شد' })
-    } catch (error) {
+    } catch (_error) {
       setMessage({ 
         type: 'error', 
         text: 'خطا در دانلود تنظیمات' 
@@ -117,7 +117,7 @@ export default function ProfilePreferencesPage() {
         } else {
           setMessage({ type: 'success', text: 'تنظیمات با موفقیت بازیابی شد' })
         }
-      } catch (error) {
+      } catch (_error) {
         setMessage({ 
           type: 'error', 
           text: 'خطا در بازیابی تنظیمات' 

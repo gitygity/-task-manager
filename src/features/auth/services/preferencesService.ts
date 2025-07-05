@@ -114,18 +114,18 @@ export const preferencesService = {
   },
 
   // Validate preferences object
-  validatePreferences(preferences: any): preferences is UserPreferences {
+  validatePreferences(preferences: unknown): preferences is UserPreferences {
     try {
       return (
         typeof preferences === 'object' &&
         preferences !== null &&
-        typeof preferences.theme === 'string' &&
-        typeof preferences.language === 'string' &&
-        typeof preferences.notifications === 'object' &&
-        typeof preferences.dateFormat === 'string' &&
-        typeof preferences.timezone === 'string' &&
-        typeof preferences.defaultTaskPriority === 'string' &&
-        typeof preferences.kanbanAutoRefresh === 'boolean'
+        typeof (preferences as Record<string, unknown>).theme === 'string' &&
+        typeof (preferences as Record<string, unknown>).language === 'string' &&
+        typeof (preferences as Record<string, unknown>).notifications === 'object' &&
+        typeof (preferences as Record<string, unknown>).dateFormat === 'string' &&
+        typeof (preferences as Record<string, unknown>).timezone === 'string' &&
+        typeof (preferences as Record<string, unknown>).defaultTaskPriority === 'string' &&
+        typeof (preferences as Record<string, unknown>).kanbanAutoRefresh === 'boolean'
       )
     } catch {
       return false

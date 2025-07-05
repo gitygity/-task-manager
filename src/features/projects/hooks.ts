@@ -2,17 +2,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { projectService } from './services/projectService'
 import type { Project, CreateProjectData, UpdateProjectData } from './types'
 
-// Query keys for project-related queries
+// Query keys
 export const PROJECT_KEYS = {
   all: ['projects'] as const,
   lists: () => [...PROJECT_KEYS.all, 'list'] as const,
   list: (userId: string) => [...PROJECT_KEYS.lists(), userId] as const,
-  detail: (projectId: string) => [...PROJECT_KEYS.all, 'detail', projectId] as const,
+  details: () => [...PROJECT_KEYS.all, 'detail'] as const,
+  detail: (projectId: string) => [...PROJECT_KEYS.details(), projectId] as const,
   stats: (userId: string) => [...PROJECT_KEYS.all, 'stats', userId] as const,
-  byPriority: (userId: string, priority: Project['priority']) => [...PROJECT_KEYS.all, 'priority', userId, priority] as const,
 } as const
 
-// Hook to fetch projects for a specific user
+// Hook to fetch projects for a user
 export function useProjects(userId: string) {
   return useQuery({
     queryKey: PROJECT_KEYS.list(userId),
@@ -104,7 +104,6 @@ export function useUpdateProject() {
       const queryCache = queryClient.getQueryCache()
       let userId = ''
       let previousProjects: Project[] | undefined
-      let previousProject: Project | undefined
 
       // Find the query that contains this project
       queryCache.findAll({ queryKey: PROJECT_KEYS.lists() }).forEach(query => {
@@ -119,7 +118,7 @@ export function useUpdateProject() {
       })
 
       // Get the single project data
-      previousProject = queryClient.getQueryData<Project>(PROJECT_KEYS.detail(projectId))
+      const previousProject = queryClient.getQueryData<Project>(PROJECT_KEYS.detail(projectId))
 
       if (userId && previousProjects) {
         await queryClient.cancelQueries({ queryKey: PROJECT_KEYS.list(userId) })
